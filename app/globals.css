@@ -1,0 +1,215 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Terminal/Cyber console theme with zkAnon brand colors */
+:root {
+  --background: #0b0b0f;
+  --foreground: #e5e5e5;
+  --card: #14141a;
+  --card-foreground: #e5e5e5;
+  --popover: #14141a;
+  --popover-foreground: #e5e5e5;
+  --primary: #de9d23;
+  --primary-foreground: #0b0b0f;
+  --secondary: #18ff9c;
+  --secondary-foreground: #0b0b0f;
+  --muted: #1f1f28;
+  --muted-foreground: #8b8b8b;
+  --accent: #de9d23;
+  --accent-foreground: #0b0b0f;
+  --destructive: #ff4444;
+  --destructive-foreground: #e5e5e5;
+  --border: #2a2a35;
+  --input: #1f1f28;
+  --ring: #de9d23;
+  --chart-1: #de9d23;
+  --chart-2: #18ff9c;
+  --chart-3: #6b8aff;
+  --chart-4: #ff6b9d;
+  --chart-5: #ffb86b;
+  --radius: 1rem;
+  --sidebar: #0b0b0f;
+  --sidebar-foreground: #e5e5e5;
+  --sidebar-primary: #de9d23;
+  --sidebar-primary-foreground: #0b0b0f;
+  --sidebar-accent: #1f1f28;
+  --sidebar-accent-foreground: #e5e5e5;
+  --sidebar-border: #2a2a35;
+  --sidebar-ring: #de9d23;
+}
+
+.dark {
+  --background: #0b0b0f;
+  --foreground: #e5e5e5;
+  --card: #14141a;
+  --card-foreground: #e5e5e5;
+  --popover: #14141a;
+  --popover-foreground: #e5e5e5;
+  --primary: #de9d23;
+  --primary-foreground: #0b0b0f;
+  --secondary: #18ff9c;
+  --secondary-foreground: #0b0b0f;
+  --muted: #1f1f28;
+  --muted-foreground: #8b8b8b;
+  --accent: #de9d23;
+  --accent-foreground: #0b0b0f;
+  --destructive: #ff4444;
+  --destructive-foreground: #e5e5e5;
+  --border: #2a2a35;
+  --input: #1f1f28;
+  --ring: #de9d23;
+  --chart-1: #de9d23;
+  --chart-2: #18ff9c;
+  --chart-3: #6b8aff;
+  --chart-4: #ff6b9d;
+  --chart-5: #ffb86b;
+  --sidebar: #0b0b0f;
+  --sidebar-foreground: #e5e5e5;
+  --sidebar-primary: #de9d23;
+  --sidebar-primary-foreground: #0b0b0f;
+  --sidebar-accent: #1f1f28;
+  --sidebar-accent-foreground: #e5e5e5;
+  --sidebar-border: #2a2a35;
+  --sidebar-ring: #de9d23;
+}
+
+@theme inline {
+  --font-sans: "Space Grotesk", "Space Grotesk Fallback", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "JetBrains Mono Fallback", monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Terminal grid background effect */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(rgba(222, 157, 35, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(222, 157, 35, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Custom scrollbar styling to match terminal theme */
+/* Custom scrollbar for webkit browsers (Chrome, Safari, Edge) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1f1f28;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #de9d23 0%, #18ff9c 100%);
+  border-radius: 4px;
+  border: 1px solid #2a2a35;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #f0b13d 0%, #2affb3 100%);
+  box-shadow: 0 0 8px rgba(222, 157, 35, 0.5);
+}
+
+/* Firefox scrollbar styling */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #de9d23 #1f1f28;
+}
+
+/* Adding shimmering spotlight animation for AnoScan button */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.shimmer-button {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(222, 157, 35, 0.3) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite linear;
+}
+
+.shimmer-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(222, 157, 35, 0.4) 50%, transparent 100%);
+  animation: shimmer-light 2s infinite ease-in-out;
+}
+
+@keyframes shimmer-light {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
+}
