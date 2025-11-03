@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Bell, Wallet, Shield, Search, PanelLeftClose, PanelLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { useZKano } from "@/hooks/use-zkano"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,11 +22,16 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
   const [session, setSession] = useState<any>(null)
   const [privacyMode, setPrivacyMode] = useState(true)
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const [solBalance, setSolBalance] = useState<number | null>(null)
+  const { getSolBalance } = useZKano()
+  const [address, setAddress] = useState<string | null>(null)
 
   useEffect(() => {
     const sessionData = localStorage.getItem("zkano_session")
     if (sessionData) {
-      setSession(JSON.parse(sessionData))
+      const parsed = JSON.parse(sessionData)
+      setSession(parsed)
+      setAddress(parsed?.address || null)
     }
 
     // Read sidebar collapsed state
@@ -34,6 +40,25 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
       setIsCollapsed(JSON.parse(stored))
     }
   }, [])
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const addr = address || JSON.parse(localStorage.getItem("zkano_session") || "null")?.address
+        if (!addr) return
+        const bal = await getSolBalance(addr)
+        setSolBalance((prev) => (prev === bal ? prev : bal))
+        // keep session in localStorage in sync for other views, but avoid setSession loop
+        const s = JSON.parse(localStorage.getItem("zkano_session") || "null") || {}
+        const next = { ...s, address: s.address || addr, solBalance: bal }
+        localStorage.setItem("zkano_session", JSON.stringify(next))
+      } catch {}
+    }
+    fetchBalance()
+    // Refresh every 30s
+    const t = setInterval(fetchBalance, 30000)
+    return () => clearInterval(t)
+  }, [address, getSolBalance])
 
   const toggleSidebar = () => {
     const newState = !isCollapsed
@@ -91,7 +116,7 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="font-mono border-border bg-transparent">
                 <Wallet className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">2.45 SOL</span>
+                <span className="hidden sm:inline">{solBalance == null ? "--" : `${solBalance.toFixed(4)} SOL`}</span>
                 <span className="mx-2">|</span>
                 <span className="hidden sm:inline">1,250 ZKANO</span>
               </Button>
@@ -102,7 +127,7 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
               <DropdownMenuItem>
                 <div className="flex justify-between w-full">
                   <span>SOL</span>
-                  <span className="text-primary">2.45</span>
+                  <span className="text-primary">{solBalance == null ? "--" : solBalance.toFixed(6)}</span>
                 </div>
               </DropdownMenuItem>
               <DropdownMenuItem>
@@ -152,11 +177,11 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
           {session && (
             <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-muted/30 border border-border">
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                <span className="text-primary font-bold text-sm font-mono">{session.zkId?.slice(0, 2) || "ZK"}</span>
+                <span className="text-primary font-bold text-sm font-mono">{(session.zk_id || session.zkId || "ZK").slice(0,2)}</span>
               </div>
               <div className="hidden md:block">
                 <p className="text-sm font-mono font-semibold">{session.username || "Anonymous"}</p>
-                <p className="text-xs text-muted-foreground font-mono">{session.zkId?.slice(0, 12)}...</p>
+                <p className="text-xs text-muted-foreground font-mono">{(session.zk_id || session.zkId || "").slice(0, 12)}...</p>
               </div>
             </div>
           )}

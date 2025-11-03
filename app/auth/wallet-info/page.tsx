@@ -79,7 +79,7 @@ export default function WalletInfoPage() {
               </div>
             </div>
 
-            {/* AnoID */}
+            {/* AnoID (zk_id) */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Shield className="w-4 h-4 text-primary" />
@@ -87,18 +87,38 @@ export default function WalletInfoPage() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="flex-1 p-3 rounded-lg bg-muted/30 border border-border font-mono text-sm break-all">
-                  {walletData.zkId}
+                  {walletData.zk_id ?? walletData.zkId}
                 </div>
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => copyToClipboard(walletData.zkId, "AnoID")}
+                  onClick={() => copyToClipboard(walletData.zk_id ?? walletData.zkId, "AnoID")}
                   className="flex-shrink-0"
                 >
                   {copied === "AnoID" ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 </Button>
               </div>
             </div>
+
+            {/* Hashed Public Key (zkano_<sha256>) */}
+            {walletData.public_key && (
+              <div className="space-y-2">
+                <label className="text-sm font-mono font-semibold">Public Key (Hashed)</label>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 p-3 rounded-lg bg-muted/30 border border-border font-mono text-sm break-all">
+                    {walletData.public_key}
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => copyToClipboard(walletData.public_key, "Hashed Public Key")}
+                    className="flex-shrink-0"
+                  >
+                    {copied === "Hashed Public Key" ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  </Button>
+                </div>
+              </div>
+            )}
 
             {/* Proof ID */}
             <div className="space-y-2">

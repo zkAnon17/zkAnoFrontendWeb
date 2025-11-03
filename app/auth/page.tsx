@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -16,18 +16,48 @@ export default function AuthPage() {
   const [username, setUsername] = useState("")
   const [anoId, setAnoId] = useState("")
   const [loading, setLoading] = useState(false)
-  const { createZKWallet, hashWithZKA403, connectWallet } = useZKano()
+  const { createZKWallet, getZkIdentifierForPublicKey, connectWallet, getSolBalance } = useZKano()
   const router = useRouter()
   const { toast } = useToast()
+
+  // Auto-redirect if session exists to avoid reconnect prompts
+  useEffect(() => {
+    try {
+      const sessionRaw = localStorage.getItem("zkano_session")
+      if (sessionRaw) {
+        router.push("/dashboard")
+      }
+    } catch {}
+  }, [router])
 
   const handleCreateWallet = async () => {
     setLoading(true)
     try {
-      // Generate wallet
+      // Generate wallet (includes zk_id & public_key fields)
       const wallet = await createZKWallet()
+      const zkId = wallet.zk_id
 
-      // Hash public key to create ZK-ID
-      const zkId = hashWithZKA403(wallet.publicKey)
+  // Persist to database via API
+      const res = await fetch("/api/wallets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          zk_id: wallet.zk_id,
+          public_key: wallet.public_key,
+          address: wallet.address,
+          username: username || "Anonymous",
+        }),
+      })
+
+      if (!res.ok) {
+        throw new Error("Failed to save wallet to database")
+      }
+
+      // Fetch SOL balance (may be 0 for new wallet)
+      let solBalance = 0
+      try {
+        solBalance = await getSolBalance(wallet.publicKey)
+      } catch {}
 
       localStorage.setItem(
         "zkano_new_wallet",
@@ -36,7 +66,10 @@ export default function AuthPage() {
           publicKey: wallet.publicKey,
           privateKey: wallet.privateKey,
           seedPhrase: wallet.seedPhrase,
-          zkId,
+          zkId, // backward-compat for UI
+          zk_id: wallet.zk_id,
+          public_key: wallet.public_key,
+          solBalance,
           username: username || "Anonymous",
         }),
       )
@@ -46,7 +79,9 @@ export default function AuthPage() {
         "zkano_session",
         JSON.stringify({
           address: wallet.address,
-          zkId,
+          zkId, // backward-compat
+          zk_id: wallet.zk_id,
+          solBalance,
           username: username || "Anonymous",
         }),
       )
@@ -60,9 +95,10 @@ export default function AuthPage() {
         router.push("/auth/wallet-info")
       }, 1500)
     } catch (error) {
+      console.error(error)
       toast({
         title: "Error",
-        description: "Failed to create wallet",
+        description: "Failed to create wallet or save to database",
         variant: "destructive",
       })
     } finally {
@@ -74,16 +110,47 @@ export default function AuthPage() {
     setLoading(true)
     try {
       const result = await connectWallet(walletType)
+  const publicKey = result.address
 
-      // Create ZK-ID from connected wallet
-      const zkId = hashWithZKA403(result.address)
+      // Check if exists in DB
+      const checkRes = await fetch(`/api/wallets?address=${encodeURIComponent(publicKey)}`)
+      let zkId: string
+
+      if (checkRes.ok) {
+        const data = await checkRes.json()
+        zkId = data.wallet.zk_id
+      } else if (checkRes.status === 404) {
+        // Not found: generate and save
+        zkId = await getZkIdentifierForPublicKey(publicKey)
+        const saveRes = await fetch("/api/wallets", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            zk_id: zkId,
+            public_key: zkId,
+            address: publicKey,
+            username: null,
+          }),
+        })
+        if (!saveRes.ok) throw new Error("Failed to save connected wallet to database")
+      } else {
+        throw new Error("Failed to check wallet in database")
+      }
+
+      // Fetch SOL balance for the connected wallet
+      let solBalance = 0
+      try {
+        solBalance = await getSolBalance(publicKey)
+      } catch {}
 
       localStorage.setItem(
         "zkano_session",
         JSON.stringify({
-          address: result.address,
-          zkId,
+          address: publicKey,
+          zkId, // backward-compat
+          zk_id: zkId,
           walletType: result.walletType,
+          solBalance,
         }),
       )
 

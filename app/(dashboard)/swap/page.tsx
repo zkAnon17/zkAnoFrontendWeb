@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { DashboardHeader } from "@/components/dashboard-header"
+import { useZKano } from "@/hooks/use-zkano"
 import { TerminalCard } from "@/components/terminal-card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -25,6 +26,23 @@ export default function SwapPage() {
   const [slippage, setSlippage] = useState("0.5")
   const [showConfirm, setShowConfirm] = useState(false)
   const { toast } = useToast()
+  const { getSolBalance } = useZKano()
+  const [solBalance, setSolBalance] = useState<number | null>(null)
+
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const s = JSON.parse(localStorage.getItem("zkano_session") || "null")
+        const addr = s?.address
+        if (!addr) return
+        const bal = await getSolBalance(addr)
+        setSolBalance(bal)
+        // keep session synced for other views
+        localStorage.setItem("zkano_session", JSON.stringify({ ...(s || {}), solBalance: bal }))
+      } catch {}
+    }
+    run()
+  }, [getSolBalance])
 
   const handleExecuteSwap = () => {
     if (!amountA || Number.parseFloat(amountA) <= 0) {
@@ -119,7 +137,9 @@ export default function SwapPage() {
                   placeholder="0.00"
                   className="font-mono bg-input border-border text-lg"
                 />
-                <p className="text-xs text-muted-foreground font-mono">Balance: 2.45 SOL</p>
+                <p className="text-xs text-muted-foreground font-mono">
+                  Balance: {solBalance == null ? "--" : `${solBalance.toFixed(6)} SOL`}
+                </p>
               </div>
 
               <div className="p-3 rounded-lg bg-muted/30 border border-border">
