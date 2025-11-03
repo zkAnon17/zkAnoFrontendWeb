@@ -1,4 +1,4 @@
-## zkAnon — The Private Side of Web3..
+## zkAnon — The Private Side of Web3
 
 zkAnon is a privacy-first web application built with Next.js that lets you create an anonymous wallet and privately trade, chat, bridge, and swap across chains without leaving traceable on‑chain footprints. It leverages zero‑knowledge proofs (ZK) and end‑to‑end encryption to protect your identity and transaction data.
 

@@ -215,7 +215,7 @@ export default function LandingPage() {
     { title: "Privacy by Design", desc: "Zero-knowledge architecture ensures we never see your transaction data" },
   ]
 
-  const contractAddress = "xxxxxxxxxxxxxxxxxxxxxxxxpump" // Updated contract address
+  const contractAddress = "GB7mpKT16pMeN6PSzMctymV9yNhHbie3HdzP2ysFpump" // Updated contract address
 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(contractAddress)
