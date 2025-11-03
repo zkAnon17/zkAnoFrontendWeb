@@ -757,7 +757,7 @@ export default function LandingPage() {
 
             {/* Links - Right */}
             <div className="flex gap-6 font-mono text-sm">
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link href="https://github.com/zkAnon17/zkAnoFrontendWeb.git" className="text-muted-foreground hover:text-primary transition-colors">
                 Github
               </Link>
               <button
@@ -766,10 +766,10 @@ export default function LandingPage() {
               >
                 Whitepaper
               </button>
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link href="https://x.com/zkAnon_Official" className="text-muted-foreground hover:text-primary transition-colors">
                 X / Twitter
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <Link href="https://discord.gg/S78axhchPK" className="text-muted-foreground hover:text-primary transition-colors">
                 Discord
               </Link>
             </div>
