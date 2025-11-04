@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Bell, Wallet, Shield, Search, PanelLeftClose, PanelLeft } from "lucide-react"
+import { Bell, Wallet, Shield, Search, PanelLeftClose, PanelLeft, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { useZKano } from "@/hooks/use-zkano"
@@ -110,6 +110,58 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
               AnoScan
             </Button>
           </Link>
+
+          {/* Download APK Button */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="font-mono border-green-500/50 text-green-500 hover:bg-green-500/10 bg-transparent"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download APK
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 font-mono">
+              <DropdownMenuLabel>Mobile App Downloads</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <a
+                  href="https://drive.google.com/uc?export=download&id=1GmZFYmBdUJr52BoSXtGFcZBo31YLvFHL"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center cursor-pointer"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  <div className="flex flex-col">
+                    <span>Android APK</span>
+                    <span className="text-xs text-muted-foreground">Latest v1.0.0</span>
+                  </div>
+                </a>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <div className="flex items-center opacity-50">
+                  <Download className="w-4 h-4 mr-2" />
+                  <div className="flex flex-col">
+                    <span>iOS App</span>
+                    <span className="text-xs text-muted-foreground">Coming Soon</span>
+                  </div>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <a
+                  href="https://github.com/zkAnon17/zkano-mobile/releases"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center cursor-pointer"
+                >
+                  <span className="text-xs">View all releases →</span>
+                </a>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           {/* Wallet Balance */}
           <DropdownMenu>
