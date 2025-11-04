@@ -601,7 +601,7 @@ export default function LandingPage() {
                 <h3 className="text-lg font-bold mb-3 font-mono">Android</h3>
                 <Button 
                   className="w-full bg-secondary hover:bg-secondary/90 text-background font-mono"
-                  onClick={() => window.open("https://drive.google.com/uc?export=download&id=1ufl949He3jHiD3CogofdJVCPZ_jCEGJe", "_blank")}
+                  onClick={() => window.open("https://drive.google.com/uc?export=download&id=1GmZFYmBdUJr52BoSXtGFcZBo31YLvFHL", "_blank")}
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Download APK
