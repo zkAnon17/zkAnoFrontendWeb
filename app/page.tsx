@@ -599,7 +599,10 @@ export default function LandingPage() {
                 </div>
                 <Smartphone className="w-12 h-12 text-secondary mx-auto mb-4" />
                 <h3 className="text-lg font-bold mb-3 font-mono">Android</h3>
-                <Button className="w-full bg-secondary hover:bg-secondary/90 text-background font-mono">
+                <Button 
+                  className="w-full bg-secondary hover:bg-secondary/90 text-background font-mono"
+                  onClick={() => window.open("https://drive.google.com/uc?export=download&id=1ufl949He3jHiD3CogofdJVCPZ_jCEGJe", "_blank")}
+                >
                   <Download className="w-4 h-4 mr-2" />
                   Download APK
                 </Button>
